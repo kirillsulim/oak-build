@@ -1,0 +1,21 @@
+[[package]]
+name = "rusty-results"
+version = "1.1.1"
+description = "Rust inspired Result and Option types"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+pydantic = ["pydantic"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.10"
+content-hash = "d7a3e92dd62382cd0c6c4900c9b299d0a8486ba54a19640bf437604cd49c0403"
+
+[metadata.files]
+rusty-results = [
+    {file = "rusty-results-1.1.1.tar.gz", hash = "sha256:d2ca6da1db15dc1ea0aa97fb35254b125ef6c872b6228d99a42f0d9fff55d40f"},
+    {file = "rusty_results-1.1.1-py3-none-any.whl", hash = "sha256:f685877d2797a90c7ee0c9cb053dd050b237a6ee7ff6b417fcc1484ea28e10ce"},
+]
