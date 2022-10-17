@@ -45,6 +45,7 @@ class TaskRunner:
                 return [f"Task {task} failed with exit code {task_result.exit_code}"]
             else:
                 return [f"Task {task} failed with exception {task_result.error}"]  # Return Exception?
+        return []
 
     @staticmethod
     def _deduct_tasks_to_run(oak_file: OakFile, tasks: List[str]) -> List[str]:
