@@ -9,6 +9,8 @@ packages = [{include = "oak_build", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 rusty-results = "^1.1.1"
+colorlog = "^6.7.0"
+toposort = "^1.7"
 
 
 [build-system]
