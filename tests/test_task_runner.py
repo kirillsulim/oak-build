@@ -10,7 +10,7 @@ class TestOakFileLoader(BaseTestCase):
         def test_task():
             pass
 
-        result = TaskRunner().run_task(*self._build_args(test_task))
+        result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
         self.assertEquals(0, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
@@ -20,7 +20,7 @@ class TestOakFileLoader(BaseTestCase):
         def test_task():
             return 123
 
-        result = TaskRunner().run_task(*self._build_args(test_task))
+        result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
         self.assertEquals(123, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
@@ -32,7 +32,7 @@ class TestOakFileLoader(BaseTestCase):
                 "param": "value",
             }
 
-        result = TaskRunner().run_task(*self._build_args(test_task))
+        result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
         self.assertEquals(0, result.exit_code)
         self.assertDictEqual({"param": "value"}, result.exit_params)
@@ -44,7 +44,7 @@ class TestOakFileLoader(BaseTestCase):
                 "param": "value",
             })
 
-        result = TaskRunner().run_task(*self._build_args(test_task))
+        result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
         self.assertEquals(456, result.exit_code)
         self.assertDictEqual({"param": "value"}, result.exit_params)
@@ -54,14 +54,14 @@ class TestOakFileLoader(BaseTestCase):
         def test_task():
             raise Exception("Test message")
 
-        result = TaskRunner().run_task(*self._build_args(test_task))
+        result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
         self.assertEquals(1, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
         self.assertIsInstance(result.error, Exception)
         self.assertEquals("Test message", str(result.error))
 
-    def _build_args(self, task: Callable):
+    def _build_args_for_run_task(self, task: Callable):
         return (
             task.__name__,
             task,
