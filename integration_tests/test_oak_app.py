@@ -19,3 +19,12 @@ class TestOakApp(BaseTestCase):
 
             created_file = Path(tmp_dir) / "result.txt"
             self.assertEquals("test content\n", created_file.read_text())
+
+    def test_param_passing(self):
+        test_project_dir = self.get_resources_dir() / "param_passing"
+        with TemporaryDirectory() as tmp_dir:
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            run(["oak", "param_consumer"], check=True, cwd=tmp_dir)
+
+            created_file = Path(tmp_dir) / "result.txt"
+            self.assertEquals("value\n", created_file.read_text())
