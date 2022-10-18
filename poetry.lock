@@ -1,0 +1,63 @@
+[[package]]
+name = "colorama"
+version = "0.4.5"
+description = "Cross-platform colored terminal text."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "colorlog"
+version = "6.7.0"
+description = "Add colours to the output of Python's logging module."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+development = ["black", "flake8", "mypy", "pytest", "types-colorama"]
+
+[[package]]
+name = "rusty-results"
+version = "1.1.1"
+description = "Rust inspired Result and Option types"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+pydantic = ["pydantic"]
+
+[[package]]
+name = "toposort"
+version = "1.7"
+description = "\"Implements a topological sort algorithm.\""
+category = "main"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.10"
+content-hash = "3748e1735894c8ca6f76d00e13df42bcb384176daafb6348c7a63d1cab276372"
+
+[metadata.files]
+colorama = [
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
+]
+colorlog = [
+    {file = "colorlog-6.7.0-py2.py3-none-any.whl", hash = "sha256:0d33ca236784a1ba3ff9c532d4964126d8a2c44f1f0cb1d2b0728196f512f662"},
+    {file = "colorlog-6.7.0.tar.gz", hash = "sha256:bd94bd21c1e13fac7bd3153f4bc3a7dc0eb0974b8bc2fdf1a989e474f6e582e5"},
+]
+rusty-results = [
+    {file = "rusty-results-1.1.1.tar.gz", hash = "sha256:d2ca6da1db15dc1ea0aa97fb35254b125ef6c872b6228d99a42f0d9fff55d40f"},
+    {file = "rusty_results-1.1.1-py3-none-any.whl", hash = "sha256:f685877d2797a90c7ee0c9cb053dd050b237a6ee7ff6b417fcc1484ea28e10ce"},
+]
+toposort = [
+    {file = "toposort-1.7-py2.py3-none-any.whl", hash = "sha256:8ed8e109e96ae30bf66da2d2155e4eb9989d9c5c743c837e37d9774a4eddd804"},
+    {file = "toposort-1.7.tar.gz", hash = "sha256:ddc2182c42912a440511bd7ff5d3e6a1cabc3accbc674a3258c8c41cbfbb2125"},
+]

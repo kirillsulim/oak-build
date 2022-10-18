@@ -1,2 +1,3 @@
 # oak-build
-Make-like python build system
+
+A make-like build system written on python
