@@ -2,7 +2,7 @@ from oak_build import task
 
 
 @task
-def task_1():
+def task_2():
     return {
-        "result": "1",
+        "result": "2",
     }

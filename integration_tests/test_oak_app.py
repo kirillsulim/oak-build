@@ -33,7 +33,7 @@ class TestOakApp(BaseTestCase):
         test_project_dir = self.get_resources_dir() / "file_import"
         with TemporaryDirectory() as tmp_dir:
             copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
-            run(["oak", "task_2"], check=True, cwd=tmp_dir)
+            run(["oak", "collector"], check=True, cwd=tmp_dir)
 
             created_file = Path(tmp_dir) / "result.txt"
-            self.assertEquals("result_value\n", created_file.read_text())
+            self.assertEquals("12\n", created_file.read_text())
