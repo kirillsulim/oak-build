@@ -7,10 +7,6 @@ from integration_tests.base_test import BaseTestCase
 
 
 class TestOakApp(BaseTestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        run(["poetry", "install"], check=True)
-
     def test_file_creator(self):
         test_project_dir = self.get_resources_dir() / "file_creator"
         with TemporaryDirectory() as tmp_dir:
