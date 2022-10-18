@@ -9,6 +9,7 @@ from oak_build.decorators import (
     TaskDeclarationsHolder,
     TaskDeclarations,
 )
+from oak_build.direcory_exec_context import DirectoryExecContext
 
 DEFAULT_OAK_FILE = "oak_file.py"
 
@@ -26,13 +27,13 @@ class OakFileLoader:
     ALIAS_REGEXP = re.compile(ALIAS_PATTERN)
 
     @staticmethod
-    def load_file(path: Path) -> Result[OakFile, List[str]]:
-        if not (path.exists() and path.is_file()):
-            return Err([f"No such file {path}"])
+    def load_file(oak_file_path: Path) -> Result[OakFile, List[str]]:
+        if not (oak_file_path.exists() and oak_file_path.is_file()):
+            return Err([f"No such file {oak_file_path}"])
 
-        code = compile(path.read_text(), path.name, "exec")
+        code = compile(oak_file_path.read_text(), oak_file_path.name, "exec")
         context = {}
-        with TaskDeclarationsHolder() as declarations:
+        with DirectoryExecContext(oak_file_path.parent), TaskDeclarationsHolder() as declarations:
             exec(code, context)
             return OakFileLoader._build_file_description(context, declarations)
 
