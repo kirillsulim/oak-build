@@ -10,7 +10,7 @@ packages = [{include = "oak_build", from = "src"}]
 repository = "https://github.com/kirillsulim/oak-build"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.7"
 rusty-results = "^1.1.1"
 colorlog = "^6.7.0"
 toposort = "^1.7"
