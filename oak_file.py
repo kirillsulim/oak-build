@@ -1,11 +1,19 @@
 from oak_build import task, run
 
 
+LINE_LENGTH = 120
+
 STYLE_TARGETS = [
     "integration_tests",
     "src",
     "tests",
     "oak_file.py",
+]
+
+FLAKE8_IGNORE = [
+    "E203",
+    "E231",
+    "W503",
 ]
 
 
@@ -30,13 +38,31 @@ def tests():
 
 
 @task
+def flake8():
+    ignore = ",".join(FLAKE8_IGNORE)
+    targets = " ".join(STYLE_TARGETS)
+    run(
+        f"poetry run flake8 --max-line-length {LINE_LENGTH} --extend-ignore {ignore} --show-source {targets}"
+    )
+
+
+@task
 def black():
     targets = " ".join(STYLE_TARGETS)
     run(f"poetry run black --check {targets}")
 
 
-@task(depends_on=[
-    black,
-])
-def style():
+@task
+def reformat_with_black():
+    targets = " ".join(STYLE_TARGETS)
+    run(f"poetry run black {targets}")
+
+
+@task(
+    depends_on=[
+        flake8,
+        black,
+    ]
+)
+def check_style():
     pass

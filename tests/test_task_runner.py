@@ -40,9 +40,12 @@ class TestOakFileLoader(BaseTestCase):
 
     def test_run_task_with_tuple_result(self):
         def test_task():
-            return (456, {
-                "param": "value",
-            })
+            return (
+                456,
+                {
+                    "param": "value",
+                },
+            )
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
@@ -65,8 +68,6 @@ class TestOakFileLoader(BaseTestCase):
         return (
             task.__name__,
             task,
-            {
-                task.__name__: task
-            },
+            {task.__name__: task},
             {},
         )

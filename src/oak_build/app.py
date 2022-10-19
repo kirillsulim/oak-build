@@ -48,6 +48,3 @@ class App:
         parser.add_argument("-f", "--file", default=DEFAULT_OAK_FILE, type=Path)
         parser.add_argument("tasks", nargs=REMAINDER)
         return parser
-
-
-

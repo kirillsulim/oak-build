@@ -38,13 +38,22 @@ class TaskRunner:
         tasks_to_run = self._deduct_tasks_to_run(oak_file, tasks)
         arguments = {}  # Maybe fill params
         for task in tasks_to_run:
-            task_result = self.run_task(task, oak_file.tasks[task], oak_file.context, arguments)
+            task_result = self.run_task(
+                task, oak_file.tasks[task], oak_file.context, arguments
+            )
             if task_result.exit_code == 0:
-                arguments.update({f"{task}_{key}": value for key, value in task_result.exit_params.items()})
+                arguments.update(
+                    {
+                        f"{task}_{key}": value
+                        for key, value in task_result.exit_params.items()
+                    }
+                )
             elif task_result.error is None:
                 return [f"Task {task} failed with exit code {task_result.exit_code}"]
             else:
-                return [f"Task {task} failed with exception {task_result.error}"]  # Return Exception?
+                return [
+                    f"Task {task} failed with exception {task_result.error}"
+                ]  # Return Exception?
         return []
 
     @staticmethod
@@ -73,7 +82,9 @@ class TaskRunner:
 
         return list(result.keys())
 
-    def run_task(self, task_name: str, task_callable: Callable, context: Dict, arguments: Dict):
+    def run_task(
+        self, task_name: str, task_callable: Callable, context: Dict, arguments: Dict
+    ):
         sig = signature(task_callable)
         locals_values = {}
         for arg in sig.parameters:
@@ -81,7 +92,11 @@ class TaskRunner:
         exception = None
 
         try:
-            exec(f'RESULT = {task_name}({", ".join(locals_values.keys())})', context, locals_values)
+            exec(
+                f'RESULT = {task_name}({", ".join(locals_values.keys())})',
+                context,
+                locals_values,
+            )
         except Exception as e:
             exception = e
         res = locals_values.get("RESULT")
@@ -94,7 +109,18 @@ class TaskRunner:
             return TaskResult(res, {}, None)
         elif isinstance(res, dict):
             return TaskResult(0, res, None)
-        elif isinstance(res, tuple) and (len(res) == 2) and isinstance(res[0], int) and isinstance(res[1], dict):
+        elif (
+            isinstance(res, tuple)
+            and (len(res) == 2)
+            and isinstance(res[0], int)
+            and isinstance(res[1], dict)
+        ):
             return TaskResult(res[0], res[1], None)
         else:
-            return TaskResult(1, {}, Exception(f"Incorrect return type for task {task_name}. Must be int, dict or tuple(int, dict)"))
+            return TaskResult(
+                1,
+                {},
+                Exception(
+                    f"Incorrect return type for task {task_name}. Must be int, dict or tuple(int, dict)"
+                ),
+            )

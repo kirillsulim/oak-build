@@ -6,11 +6,11 @@ from logging.config import dictConfig
 
 
 LEVELS = [
-    'critical',
-    'error',
-    'warning',
-    'info',
-    'debug',
+    "critical",
+    "error",
+    "warning",
+    "info",
+    "debug",
 ]
 DEFAULT_LEVEL = "warning"
 
@@ -45,4 +45,3 @@ def init_logging(log_level: str):
             },
         }
     )
-

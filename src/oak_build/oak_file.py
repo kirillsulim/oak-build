@@ -33,12 +33,16 @@ class OakFileLoader:
 
         code = compile(oak_file_path.read_text(), oak_file_path.name, "exec")
         context = {}
-        with DirectoryExecContext(oak_file_path.parent), TaskDeclarationsHolder() as declarations:
+        with DirectoryExecContext(
+            oak_file_path.parent
+        ), TaskDeclarationsHolder() as declarations:
             exec(code, context)
             return OakFileLoader._build_file_description(context, declarations)
 
     @staticmethod
-    def _build_file_description(context: Dict, declarations: TaskDeclarations) -> Result[OakFile, List[str]]:
+    def _build_file_description(
+        context: Dict, declarations: TaskDeclarations
+    ) -> Result[OakFile, List[str]]:
         errors = []
 
         tasks = declarations.tasks
@@ -54,12 +58,14 @@ class OakFileLoader:
                     aliases[alias] = task_name
 
         if not errors:
-            return Ok(OakFile(
-                tasks,
-                dependencies,
-                aliases,
-                context,
-            ))
+            return Ok(
+                OakFile(
+                    tasks,
+                    dependencies,
+                    aliases,
+                    context,
+                )
+            )
         else:
             return Err(errors)
 
@@ -69,5 +75,5 @@ class OakFileLoader:
             return Empty()
         else:
             return Some(
-                f"Alias \"{alias}\" for task {task_name} doesn't match alias pattern {OakFileLoader.ALIAS_PATTERN}"
+                f'Alias "{alias}" for task {task_name} doesn\'t match alias pattern {OakFileLoader.ALIAS_PATTERN}'
             )
