@@ -12,7 +12,7 @@ class TestOakFileLoader(BaseTestCase):
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
-        self.assertEquals(0, result.exit_code)
+        self.assertEqual(0, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
         self.assertIsNone(result.error)
 
@@ -22,7 +22,7 @@ class TestOakFileLoader(BaseTestCase):
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
-        self.assertEquals(123, result.exit_code)
+        self.assertEqual(123, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
         self.assertIsNone(result.error)
 
@@ -34,7 +34,7 @@ class TestOakFileLoader(BaseTestCase):
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
-        self.assertEquals(0, result.exit_code)
+        self.assertEqual(0, result.exit_code)
         self.assertDictEqual({"param": "value"}, result.exit_params)
         self.assertIsNone(result.error)
 
@@ -46,7 +46,7 @@ class TestOakFileLoader(BaseTestCase):
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
-        self.assertEquals(456, result.exit_code)
+        self.assertEqual(456, result.exit_code)
         self.assertDictEqual({"param": "value"}, result.exit_params)
         self.assertIsNone(result.error)
 
@@ -56,10 +56,10 @@ class TestOakFileLoader(BaseTestCase):
 
         result = TaskRunner().run_task(*self._build_args_for_run_task(test_task))
 
-        self.assertEquals(1, result.exit_code)
+        self.assertEqual(1, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
         self.assertIsInstance(result.error, Exception)
-        self.assertEquals("Test message", str(result.error))
+        self.assertEqual("Test message", str(result.error))
 
     def _build_args_for_run_task(self, task: Callable):
         return (
