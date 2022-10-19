@@ -25,4 +25,7 @@ jobs:
           poetry install
       - name: Run tests
         run: |
-          nox
+          poetry run oak tests
+      - name: Check style
+        run: |
+          poetry run oak check_style

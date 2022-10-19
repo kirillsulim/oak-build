@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
       - name: Tag
         run: |
-          export TAG="v$(cat tapas/tapas.version)"
+          export TAG="$(poetry version -s)"
           git tag "${TAG}"
           git push origin "${TAG}"
           echo "TAG=${TAG}" >> $GITHUB_ENV
