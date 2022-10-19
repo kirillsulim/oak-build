@@ -20,6 +20,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
+      - name: Install oak for self build
+        run: |
+          poetry install
       - name: Run tests
         run: |
           nox
