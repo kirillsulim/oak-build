@@ -16,4 +16,8 @@ class BaseTestCase(TestCase):
     def run_oak(self, cwd: Path, *tasks) -> None:
         task_list = " ".join(tasks)
         oak_file = cwd / DEFAULT_OAK_FILE
-        run(f"poetry run oak --log-level=debug --file={oak_file} {task_list}", check=True, shell=True)
+        run(
+            f"poetry run oak --log-level=debug --file={oak_file} {task_list}",
+            check=True,
+            shell=True,
+        )

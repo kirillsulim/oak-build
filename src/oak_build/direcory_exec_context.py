@@ -16,4 +16,3 @@ class DirectoryExecContext:
     def __exit__(self, exc_type, exc_val, exc_tb):
         sys.path = sys.path[1:]
         os.chdir(self.cwd)
-

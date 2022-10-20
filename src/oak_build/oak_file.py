@@ -38,13 +38,13 @@ class OakFileLoader:
             oak_file_path.parent
         ), TaskDeclarationsHolder() as declarations:
             exec(code, context)
-            return OakFileLoader._build_file_description(oak_file_path, context, declarations)
+            return OakFileLoader._build_file_description(
+                oak_file_path, context, declarations
+            )
 
     @staticmethod
     def _build_file_description(
-        path: Path,
-        context: Dict,
-        declarations: TaskDeclarations
+        path: Path, context: Dict, declarations: TaskDeclarations
     ) -> Result[OakFile, List[str]]:
         errors = []
 

@@ -51,7 +51,9 @@ class TaskRunner:
                         }
                     )
                 elif task_result.error is None:
-                    return [f"Task {task} failed with exit code {task_result.exit_code}"]
+                    return [
+                        f"Task {task} failed with exit code {task_result.exit_code}"
+                    ]
                 else:
                     return [
                         f"Task {task} failed with exception {task_result.error}"
