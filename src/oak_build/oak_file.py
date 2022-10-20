@@ -16,6 +16,7 @@ DEFAULT_OAK_FILE = "oak_file.py"
 
 @dataclass
 class OakFile:
+    path: Path
     tasks: Dict[str, Callable]
     dependencies: Dict[str, List[str]]
     aliases: Dict[str, str]
@@ -37,11 +38,13 @@ class OakFileLoader:
             oak_file_path.parent
         ), TaskDeclarationsHolder() as declarations:
             exec(code, context)
-            return OakFileLoader._build_file_description(context, declarations)
+            return OakFileLoader._build_file_description(oak_file_path, context, declarations)
 
     @staticmethod
     def _build_file_description(
-        context: Dict, declarations: TaskDeclarations
+        path: Path,
+        context: Dict,
+        declarations: TaskDeclarations
     ) -> Result[OakFile, List[str]]:
         errors = []
 
@@ -60,6 +63,7 @@ class OakFileLoader:
         if not errors:
             return Ok(
                 OakFile(
+                    path,
                     tasks,
                     dependencies,
                     aliases,

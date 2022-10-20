@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Callable, Optional
 
 from toposort import toposort_flatten
 
+from oak_build.direcory_exec_context import DirectoryExecContext
 from oak_build.oak_file import OakFile
 
 
@@ -37,24 +38,25 @@ class TaskRunner:
 
         tasks_to_run = self._deduct_tasks_to_run(oak_file, tasks)
         arguments = {}  # Maybe fill params
-        for task in tasks_to_run:
-            task_result = self.run_task(
-                task, oak_file.tasks[task], oak_file.context, arguments
-            )
-            if task_result.exit_code == 0:
-                arguments.update(
-                    {
-                        f"{task}_{key}": value
-                        for key, value in task_result.exit_params.items()
-                    }
+        with DirectoryExecContext(oak_file.path.parent):
+            for task in tasks_to_run:
+                task_result = self.run_task(
+                    task, oak_file.tasks[task], oak_file.context, arguments
                 )
-            elif task_result.error is None:
-                return [f"Task {task} failed with exit code {task_result.exit_code}"]
-            else:
-                return [
-                    f"Task {task} failed with exception {task_result.error}"
-                ]  # Return Exception?
-        return []
+                if task_result.exit_code == 0:
+                    arguments.update(
+                        {
+                            f"{task}_{key}": value
+                            for key, value in task_result.exit_params.items()
+                        }
+                    )
+                elif task_result.error is None:
+                    return [f"Task {task} failed with exit code {task_result.exit_code}"]
+                else:
+                    return [
+                        f"Task {task} failed with exception {task_result.error}"
+                    ]  # Return Exception?
+            return []
 
     @staticmethod
     def _deduct_tasks_to_run(oak_file: OakFile, tasks: List[str]) -> List[str]:
