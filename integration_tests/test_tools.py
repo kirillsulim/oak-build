@@ -10,4 +10,4 @@ class TestOakApp(BaseTestCase):
         test_project_dir = self.get_resources_dir() / "shell_run"
         with TemporaryDirectory() as tmp_dir:
             copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
-            run(["oak", "run_echo"], check=True, cwd=tmp_dir)
+            run(["oak", "run_echo"], check=True, shell=True, cwd=tmp_dir)
