@@ -40,12 +40,16 @@ def task(
         elif isinstance(callable_or_name, str):
             return callable_or_name
         else:
-            raise ValueError(f"Cannot resolve name for type {callable_or_name.__class__}")
+            raise ValueError(
+                f"Cannot resolve name for type {callable_or_name.__class__}"
+            )
 
     task_name = resolve_callable_name(task_callable)
 
     TaskDeclarationsHolder.INSTANCE.tasks[task_name] = task_callable
     TaskDeclarationsHolder.INSTANCE.aliases[task_name] = aliases
-    TaskDeclarationsHolder.INSTANCE.dependencies[task_name] = [resolve_callable_name(d) for d in depends_on]
+    TaskDeclarationsHolder.INSTANCE.dependencies[task_name] = [
+        resolve_callable_name(d) for d in depends_on
+    ]
 
     return task_callable

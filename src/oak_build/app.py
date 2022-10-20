@@ -16,6 +16,8 @@ class App:
 
         init_logging(parsed_args.log_level)
 
+        logging.debug(f"Parsed arguments are {parsed_args}")
+
         self.oak_file: Path = parsed_args.file
         self.tasks: List[str] = parsed_args.tasks
 
@@ -48,6 +50,3 @@ class App:
         parser.add_argument("-f", "--file", default=DEFAULT_OAK_FILE, type=Path)
         parser.add_argument("tasks", nargs=REMAINDER)
         return parser
-
-
-
