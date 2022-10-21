@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from inspect import signature
 from typing import List, Dict, Any, Callable, Optional
 
+from rusty_results import Result, Err, Ok
 from toposort import toposort_flatten
 
 from oak_build.direcory_exec_context import DirectoryExecContext
@@ -24,20 +25,19 @@ class TaskResult:
 
 
 class TaskRunner:
-    def run_tasks(self, oak_file: OakFile, tasks: List[str]) -> List[str]:
-        errors = []
-
+    def run_tasks(self, oak_file: OakFile, params: Dict[str, str], tasks: List[str]) -> Result[None, List[str]]:
         tasks = [unify_task_name(t) for t in tasks]
-
         known_tasks = set(oak_file.tasks.keys()).union(oak_file.aliases.keys())
+
+        errors = []
         for task in tasks:
             if task not in known_tasks:
                 errors.append(f"Unknown task {task}")
         if errors:
-            return errors
+            return Err(errors)
 
         tasks_to_run = self._deduct_tasks_to_run(oak_file, tasks)
-        arguments = {}  # Maybe fill params
+        arguments = dict(params)
         with DirectoryExecContext(oak_file.path.parent):
             for task in tasks_to_run:
                 task_result = self.run_task(
@@ -51,14 +51,14 @@ class TaskRunner:
                         }
                     )
                 elif task_result.error is None:
-                    return [
+                    return Err([
                         f"Task {task} failed with exit code {task_result.exit_code}"
-                    ]
+                    ])
                 else:
-                    return [
+                    return Err([
                         f"Task {task} failed with exception {task_result.error}"
-                    ]  # Return Exception?
-            return []
+                    ])
+            return Ok(None)
 
     @staticmethod
     def _deduct_tasks_to_run(oak_file: OakFile, tasks: List[str]) -> List[str]:
