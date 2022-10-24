@@ -7,7 +7,7 @@ from argparse import ArgumentParser, REMAINDER
 from rusty_results import Result, Ok, Err
 
 from oak_build.app_logging import DEFAULT_LEVEL, LEVELS, init_logging
-from oak_build.oak_file import DEFAULT_OAK_FILE, OakFileLoader, OakFile
+from oak_build.oak_file import DEFAULT_OAK_FILE, OakFileLoader
 from oak_build.task_runner import TaskRunner
 
 
