@@ -1,13 +1,15 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from inspect import signature
+from enum import Enum
+from inspect import signature, Signature
 from typing import List, Dict, Any, Callable, Optional
 
+from rusty_results import Result, Err, Ok
 from toposort import toposort_flatten
 
 from oak_build.direcory_exec_context import DirectoryExecContext
 from oak_build.oak_file import OakFile
-
+from oak_build.parsers import parse_str, parse_int, parse_bool, parse_enum
 
 DUMMY = 0
 
@@ -24,24 +26,25 @@ class TaskResult:
 
 
 class TaskRunner:
-    def run_tasks(self, oak_file: OakFile, tasks: List[str]) -> List[str]:
-        errors = []
-
+    def run_tasks(
+        self, oak_file: OakFile, params: Dict[str, str], tasks: List[str]
+    ) -> Result[None, List[str]]:
         tasks = [unify_task_name(t) for t in tasks]
-
         known_tasks = set(oak_file.tasks.keys()).union(oak_file.aliases.keys())
+
+        errors = []
         for task in tasks:
             if task not in known_tasks:
                 errors.append(f"Unknown task {task}")
         if errors:
-            return errors
+            return Err(errors)
 
         tasks_to_run = self._deduct_tasks_to_run(oak_file, tasks)
-        arguments = {}  # Maybe fill params
+        arguments = {}
         with DirectoryExecContext(oak_file.path.parent):
             for task in tasks_to_run:
                 task_result = self.run_task(
-                    task, oak_file.tasks[task], oak_file.context, arguments
+                    task, oak_file.tasks[task], oak_file.context, arguments, params
                 )
                 if task_result.exit_code == 0:
                     arguments.update(
@@ -51,14 +54,14 @@ class TaskRunner:
                         }
                     )
                 elif task_result.error is None:
-                    return [
-                        f"Task {task} failed with exit code {task_result.exit_code}"
-                    ]
+                    return Err(
+                        [f"Task {task} failed with exit code {task_result.exit_code}"]
+                    )
                 else:
-                    return [
-                        f"Task {task} failed with exception {task_result.error}"
-                    ]  # Return Exception?
-            return []
+                    return Err(
+                        [f"Task {task} failed with exception {task_result.error}"]
+                    )
+            return Ok(None)
 
     @staticmethod
     def _deduct_tasks_to_run(oak_file: OakFile, tasks: List[str]) -> List[str]:
@@ -87,14 +90,41 @@ class TaskRunner:
         return list(result.keys())
 
     def run_task(
-        self, task_name: str, task_callable: Callable, context: Dict, arguments: Dict
+        self,
+        task_name: str,
+        task_callable: Callable,
+        context: Dict,
+        arguments: Dict,
+        parameters: Dict,
     ):
+        """
+        :param task_name: task name
+        :param task_callable: task callable
+        :param context: global task context
+        :param arguments: arguments build as task results
+        :param parameters: str parameters fro cli
+        :return:
+        """
         sig = signature(task_callable)
         locals_values = {}
         for arg in sig.parameters:
-            locals_values[arg] = arguments.get(arg)
-        exception = None
+            if arg in parameters:
+                parser = TaskRunner.get_argument_parser(sig.parameters[arg].annotation)
+                result = parser(parameters.get(arg))
+                if result.is_ok:
+                    locals_values[arg] = result.unwrap()
+                else:
+                    return TaskResult(
+                        1,
+                        {},
+                        ValueError(
+                            f"Cannot parse parameter {arg} of {task_name} because of {result.unwrap_err()}"
+                        ),
+                    )
+            elif arg in arguments:
+                locals_values[arg] = arguments[arg]
 
+        exception = None
         try:
             exec(
                 f'RESULT = {task_name}({", ".join(locals_values.keys())})',
@@ -128,3 +158,18 @@ class TaskRunner:
                     f"Incorrect return type for task {task_name}. Must be int, dict or tuple(int, dict)"
                 ),
             )
+
+    @staticmethod
+    def get_argument_parser(annotation) -> Callable[[str], Result]:
+        if annotation is Signature.empty:
+            return lambda value: Ok(value)
+        elif annotation is str:
+            return parse_str
+        elif annotation is bool:
+            return parse_bool
+        elif annotation is int:
+            return parse_int
+        elif issubclass(annotation, Enum):
+            return lambda value: parse_enum(value, annotation)
+        else:
+            return lambda value: annotation(value)
