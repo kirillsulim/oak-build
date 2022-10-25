@@ -93,3 +93,14 @@ class TestOakApp(BaseTestCase):
 
             created_file = tmp_dir / "result.txt"
             self.assertEqual("VALUE\n", created_file.read_text())
+
+    def test_params_with_default_value(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "str_param_with_default_value")
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("default\n", created_file.read_text())

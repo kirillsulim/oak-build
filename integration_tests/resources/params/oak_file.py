@@ -36,3 +36,9 @@ class TaskEnum(Enum):
 def enum_param(param: TaskEnum):
     with open(Path("result.txt"), "w") as txt:
         txt.write(f"{param.name}\n")
+
+
+@task
+def str_param_with_default_value(param: str = "default"):
+    with open(Path("result.txt"), "w") as txt:
+        txt.write(f"{param}\n")
