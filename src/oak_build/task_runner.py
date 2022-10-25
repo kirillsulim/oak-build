@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from dataclasses import dataclass
 from enum import Enum
-from inspect import signature
+from inspect import signature, Signature
 from typing import List, Dict, Any, Callable, Optional
 
 from rusty_results import Result, Err, Ok
@@ -148,14 +148,14 @@ class TaskRunner:
 
     @staticmethod
     def get_argument_parser(annotation) -> Callable[[str], Result]:
-        if annotation is None:
+        if annotation is Signature.empty:
             return lambda value: Ok(value)
         elif annotation is str:
             return parse_str
-        elif annotation is int:
-            return parse_int
         elif annotation is bool:
             return parse_bool
+        elif annotation is int:
+            return parse_int
         elif issubclass(annotation, Enum):
             return lambda value: parse_enum(value, annotation)
         else:

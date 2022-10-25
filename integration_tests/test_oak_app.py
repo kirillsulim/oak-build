@@ -17,13 +17,13 @@ class TestOakApp(BaseTestCase):
             created_file = tmp_dir / "result.txt"
             self.assertEqual("test content\n", created_file.read_text())
 
-    def test_param_passing(self):
-        test_project_dir = self.get_resources_dir() / "param_passing"
+    def test_argument_passing(self):
+        test_project_dir = self.get_resources_dir() / "argument_passing"
         with TemporaryDirectory() as tmp_dir:
 
             tmp_dir = Path(tmp_dir)
             copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
-            self.run_oak(tmp_dir, "param_consumer")
+            self.run_oak(tmp_dir, "argument_consumer")
 
             created_file = tmp_dir / "result.txt"
             self.assertEqual("value\n", created_file.read_text())
@@ -38,3 +38,58 @@ class TestOakApp(BaseTestCase):
 
             created_file = tmp_dir / "result.txt"
             self.assertEqual("12\n", created_file.read_text())
+
+    def test_params_no_type_param(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "no_type_param", params={"param": "test_value"})
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("test_value\n", created_file.read_text())
+
+    def test_params_str_param(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "str_param", params={"param": "Some string value"})
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("Some string value\n", created_file.read_text())
+
+    def test_params_int_param(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "str_param", params={"param": "1234"})
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("1234\n", created_file.read_text())
+
+    def test_params_bool_param(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "bool_param", params={"param": "yes"})
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("True\n", created_file.read_text())
+
+    def test_params_enum_param(self):
+        test_project_dir = self.get_resources_dir() / "params"
+        with TemporaryDirectory() as tmp_dir:
+            tmp_dir = Path(tmp_dir)
+
+            copytree(test_project_dir, tmp_dir, dirs_exist_ok=True)
+            self.run_oak(tmp_dir, "enum_param", params={"param": "value"})
+
+            created_file = tmp_dir / "result.txt"
+            self.assertEqual("VALUE\n", created_file.read_text())

@@ -22,7 +22,7 @@ class App:
 
         self.oak_file: Path = parsed_args.file
         self.tasks: List[str] = parsed_args.tasks
-        self.params: List[str] = parsed_args.params
+        self.params: List[str] = parsed_args.param
 
     def run(self) -> int:
         params = self._parse_params(self.params)
@@ -51,7 +51,7 @@ class App:
         )
         parser.add_argument("-l", "--log-level", default=DEFAULT_LEVEL, choices=LEVELS)
         parser.add_argument("-f", "--file", default=DEFAULT_OAK_FILE, type=Path)
-        parser.add_argument("-p", "--params", nargs="*", default=[], help="Script parameters")
+        parser.add_argument("-p", "--param", action="append", default=[], help="Script parameters")
         parser.add_argument("tasks", nargs=REMAINDER)
         return parser
 
