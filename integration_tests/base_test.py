@@ -14,11 +14,15 @@ class BaseTestCase(TestCase):
     def setUpClass(cls) -> None:
         run(["poetry", "install"], check=True)
 
-    def run_oak(self, cwd: Path, *tasks, params: Optional[Dict[str, str]] = None) -> None:
+    def run_oak(
+        self, cwd: Path, *tasks, params: Optional[Dict[str, str]] = None
+    ) -> None:
         if params is None:
             params_list = ""
         else:
-            params_list = " ".join([f"--param \"{key}={value}\"" for key, value in params.items()])
+            params_list = " ".join(
+                [f'--param "{key}={value}"' for key, value in params.items()]
+            )
 
         task_list = " ".join(tasks)
         oak_file = cwd / DEFAULT_OAK_FILE

@@ -16,22 +16,32 @@ def parse_int(value: str) -> Result[int, List[str]]:
     try:
         return Ok(int(value))
     except ValueError:
-        return Err([f"Cannot parse \"{value}\" as int"])
+        return Err([f'Cannot parse "{value}" as int'])
 
 
-TRUE_VALUES = OrderedDict({k: None for k in [
-    "true",
-    "t",
-    "yes",
-    "y",
-]})
+TRUE_VALUES = OrderedDict(
+    {
+        k: None
+        for k in [
+            "true",
+            "t",
+            "yes",
+            "y",
+        ]
+    }
+)
 
-FALSE_VALUES = OrderedDict({k: None for k in [
-    "false",
-    "f",
-    "no",
-    "n",
-]})
+FALSE_VALUES = OrderedDict(
+    {
+        k: None
+        for k in [
+            "false",
+            "f",
+            "no",
+            "n",
+        ]
+    }
+)
 
 ALLOWED_VALUES = list(TRUE_VALUES.keys()) + list(FALSE_VALUES.keys())
 
@@ -43,7 +53,9 @@ def parse_bool(value: str) -> Result[bool, List[str]]:
     elif l_value in FALSE_VALUES:
         return Ok(False)
     else:
-        return Err([f"Unknown value {value}, allowed values are {', '.join(ALLOWED_VALUES)}"])
+        return Err(
+            [f"Unknown value {value}, allowed values are {', '.join(ALLOWED_VALUES)}"]
+        )
 
 
 E = TypeVar("E", bound=Enum)
@@ -57,4 +69,3 @@ def parse_enum(value: str, enum_class: Type[E]) -> Result[E, List[str]]:
     else:
         allowed_values = ", ".join(members)
         return Err([f"Unknown value {value}, allowed values are {allowed_values}"])
-

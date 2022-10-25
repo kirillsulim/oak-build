@@ -26,7 +26,9 @@ class TaskResult:
 
 
 class TaskRunner:
-    def run_tasks(self, oak_file: OakFile, params: Dict[str, str], tasks: List[str]) -> Result[None, List[str]]:
+    def run_tasks(
+        self, oak_file: OakFile, params: Dict[str, str], tasks: List[str]
+    ) -> Result[None, List[str]]:
         tasks = [unify_task_name(t) for t in tasks]
         known_tasks = set(oak_file.tasks.keys()).union(oak_file.aliases.keys())
 
@@ -52,13 +54,13 @@ class TaskRunner:
                         }
                     )
                 elif task_result.error is None:
-                    return Err([
-                        f"Task {task} failed with exit code {task_result.exit_code}"
-                    ])
+                    return Err(
+                        [f"Task {task} failed with exit code {task_result.exit_code}"]
+                    )
                 else:
-                    return Err([
-                        f"Task {task} failed with exception {task_result.error}"
-                    ])
+                    return Err(
+                        [f"Task {task} failed with exception {task_result.error}"]
+                    )
             return Ok(None)
 
     @staticmethod
@@ -88,7 +90,12 @@ class TaskRunner:
         return list(result.keys())
 
     def run_task(
-        self, task_name: str, task_callable: Callable, context: Dict, arguments: Dict, parameters: Dict
+        self,
+        task_name: str,
+        task_callable: Callable,
+        context: Dict,
+        arguments: Dict,
+        parameters: Dict,
     ):
         """
         :param task_name: task name
@@ -107,7 +114,13 @@ class TaskRunner:
                 if result.is_ok:
                     locals_values[arg] = result.unwrap()
                 else:
-                    return TaskResult(1, {}, ValueError(f"Cannot parse parameter {arg} of {task_name} because of {result.unwrap_err()}"))
+                    return TaskResult(
+                        1,
+                        {},
+                        ValueError(
+                            f"Cannot parse parameter {arg} of {task_name} because of {result.unwrap_err()}"
+                        ),
+                    )
             elif arg in arguments:
                 locals_values[arg] = arguments[arg]
 

@@ -22,7 +22,7 @@ class TestEnumParser(TestCase):
         self.assertTrue(err_result.is_err)
         self.assertListEqual(
             ["Unknown value MISSING_VALUE, allowed values are VALUE_A, VALUE_B"],
-            err_result.unwrap_err()
+            err_result.unwrap_err(),
         )
 
 
@@ -37,10 +37,7 @@ class TestIntParser(TestCase):
         err_result = parse_int("abc")
 
         self.assertTrue(err_result.is_err)
-        self.assertListEqual(
-            ["Cannot parse \"abc\" as int"],
-            err_result.unwrap_err()
-        )
+        self.assertListEqual(['Cannot parse "abc" as int'], err_result.unwrap_err())
 
 
 class TestBoolParser(TestCase):
@@ -56,6 +53,5 @@ class TestBoolParser(TestCase):
         self.assertTrue(err_result.is_err)
         self.assertListEqual(
             ["Unknown value abc, allowed values are true, t, yes, y, false, f, no, n"],
-            err_result.unwrap_err()
+            err_result.unwrap_err(),
         )
-

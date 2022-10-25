@@ -37,7 +37,9 @@ class App:
                 logging.error(error)
             return 1
 
-        run_result = TaskRunner().run_tasks(file_description.unwrap(), params.unwrap(), self.tasks)
+        run_result = TaskRunner().run_tasks(
+            file_description.unwrap(), params.unwrap(), self.tasks
+        )
         if run_result.is_err:
             for error in run_result.unwrap_err():
                 logging.error(error)
@@ -51,7 +53,9 @@ class App:
         )
         parser.add_argument("-l", "--log-level", default=DEFAULT_LEVEL, choices=LEVELS)
         parser.add_argument("-f", "--file", default=DEFAULT_OAK_FILE, type=Path)
-        parser.add_argument("-p", "--param", action="append", default=[], help="Script parameters")
+        parser.add_argument(
+            "-p", "--param", action="append", default=[], help="Script parameters"
+        )
         parser.add_argument("tasks", nargs=REMAINDER)
         return parser
 

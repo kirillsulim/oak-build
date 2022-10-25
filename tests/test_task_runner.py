@@ -47,7 +47,9 @@ class TestOakFileLoader(BaseTestCase):
                 },
             )
 
-        result = TaskRunner().run_task(*self._build_args_for_run_task(tuple_result_task))
+        result = TaskRunner().run_task(
+            *self._build_args_for_run_task(tuple_result_task)
+        )
 
         self.assertEqual(456, result.exit_code)
         self.assertDictEqual({"param": "value"}, result.exit_params)
@@ -57,7 +59,9 @@ class TestOakFileLoader(BaseTestCase):
         def exception_result_task():
             raise Exception("Test message")
 
-        result = TaskRunner().run_task(*self._build_args_for_run_task(exception_result_task))
+        result = TaskRunner().run_task(
+            *self._build_args_for_run_task(exception_result_task)
+        )
 
         self.assertEqual(1, result.exit_code)
         self.assertDictEqual({}, result.exit_params)
@@ -68,7 +72,11 @@ class TestOakFileLoader(BaseTestCase):
         def task_with_parameters(key: bool):
             return {"result": key}
 
-        result = TaskRunner().run_task(*self._build_args_for_run_task(task_with_parameters, parameters={"key": "True"}))
+        result = TaskRunner().run_task(
+            *self._build_args_for_run_task(
+                task_with_parameters, parameters={"key": "True"}
+            )
+        )
 
         self.assertEqual(0, result.exit_code)
         self.assertDictEqual({"result": True}, result.exit_params)
@@ -77,7 +85,11 @@ class TestOakFileLoader(BaseTestCase):
         def task_with_arguments(previous_task_key: bool):
             return {"result": previous_task_key}
 
-        result = TaskRunner().run_task(*self._build_args_for_run_task(task_with_arguments, arguments={"previous_task_key": False}))
+        result = TaskRunner().run_task(
+            *self._build_args_for_run_task(
+                task_with_arguments, arguments={"previous_task_key": False}
+            )
+        )
 
         self.assertEqual(0, result.exit_code)
         self.assertDictEqual({"result": False}, result.exit_params)
