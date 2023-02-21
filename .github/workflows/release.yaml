@@ -22,7 +22,7 @@ jobs:
           roleId: "ci_kirillsulim_oak_build"
           secretId: ${{ secrets.VAULT_SECRET_ID }}
           secrets: |
-            secret/ci/kirillsulim/oak-build pypi_token | PYPI_API_TOKEN
+            secret/data/ci/kirillsulim/oak-build pypi_token | PYPI_API_TOKEN
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
