@@ -15,6 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Import Secrets
+        id: secrets
         uses: hashicorp/vault-action@v2
         with:
           url: https://vault.su0.org
@@ -37,7 +38,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
         with:
           user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: ${{ steps.secrets.outputs.PYPI_API_TOKEN }}
       - name: Tag
         run: |
           export TAG="$(poetry version -s)"
